@@ -5,7 +5,7 @@ A .Net Portable Class Library to simplify the calling of a RESTful web service f
 
 Currently we support the following .Net versions:
 
-Supported versiom:
+Supported versions:
 
 	.NET framework 4.0 and higher,
 	.NET for Windows Store Apps,
@@ -45,5 +45,11 @@ Similarly to call a RESTful XML web service would be:
     var employee = task.Result.Resource;
 ```
 As you can see from the examples above the library makes use of the Task<T> metaphor from the .Net framework to execute the asynchronous request over the wire.
+
+The library was developed using TDD principles and has a set of test in the solution for all the main HTTP operations GET, POST, PUT & DELETE. For more information see the [Getting Started] (https://github.com/oriches/Simple.Rest/wiki/Getting-Started) guide.
+
+Available for download from NuGet:
+
+https://nuget.org/packages/Simple.Rest
 
 
