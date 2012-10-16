@@ -1,7 +1,15 @@
 Simple.Rest
 ===========
 
-A library to simplify the calling of a RESTful web service from a .Net client application.
+A .Net Portable Class Library to simplify the calling of a RESTful web service from a .Net client application.
+
+Currently we support the following .Net versions:
+
+Supported versiom:
+
+	.NET framework 4.0 and higher,
+	.NET for Windows Store Apps,
+	Silverlight 5.0
 
 # Introduction
 
@@ -36,6 +44,6 @@ Similarly to call a RESTful XML web service would be:
         
     var employee = task.Result.Resource;
 ```
-
+As you can see from the examples above the library makes use of the Task<T> metaphor from the .Net framework to execute the asynchronous request over the wire.
 
 
