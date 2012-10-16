@@ -107,7 +107,7 @@
 
             // ACT
             Exception exn = null;
-            var result = _jsonRestClient.GetAsync<Employee>(url)
+            _jsonRestClient.GetAsync<Employee>(url)
                 .ToObservable()
                 .Take(1)
                 .Subscribe(_ => { }, e =>
@@ -130,7 +130,7 @@
 
             // ACT
             Exception exn = null;
-            var result = _jsonRestClient.GetAsync<Employee>(url)
+            _jsonRestClient.GetAsync<Employee>(url)
                 .ToObservable()
                 .Take(1)
                 .Subscribe(_ => { }, e =>
@@ -153,7 +153,7 @@
 
             // ACT
             Exception exn = null;
-            var result = _jsonRestClient.GetAsync<Employee>(url)
+            _jsonRestClient.GetAsync<Employee>(url)
                 .ToObservable()
                 .Take(1)
                 .Subscribe(_ => { }, e =>
@@ -175,7 +175,7 @@
 
             // ACT
             Exception exn = null;
-            var result = _jsonRestClient.GetAsync<Employee>(url)
+            _jsonRestClient.GetAsync<Employee>(url)
                 .ToObservable()
                 .Take(1)
                 .Subscribe(_ => { }, e =>
