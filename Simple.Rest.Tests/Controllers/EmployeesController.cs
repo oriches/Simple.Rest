@@ -62,9 +62,15 @@
 
         public HttpResponseMessage Post(Employee employee)
         {
-            var response = Request.CreateResponse(HttpStatusCode.Created, employee);
+            var maxId = Employees.Max(e => e.Id);
+            var newId = ++maxId;
+
+            employee.Id = newId;
+            Employees.Add(employee);
 
             var uri = Url.Link("DefaultApi", new { id = employee.Id });
+
+            var response = Request.CreateResponse(HttpStatusCode.Redirect);
             response.Headers.Location = new Uri(uri);
             return response;
         }

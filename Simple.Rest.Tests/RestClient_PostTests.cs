@@ -1,6 +1,8 @@
 ﻿namespace Simple.Rest.Tests
 {
     using System;
+    using System.Linq;
+    using Controllers;
     using Dto;
     using NUnit.Framework;
     using Rest;
@@ -20,9 +22,10 @@
         {
             // ARRANGE
             var url = new Uri(_baseUrl + "/api/employees");
+            var maxId = EmployeesController.Employees.Max(e => e.Id);
             
             // ACT
-            var newEmployee = new Employee {Id = 3, FirstName = "Alex", LastName = "Chauhan"};
+            var newEmployee = new Employee {FirstName = "Alex", LastName = "Chauhan"};
             var task = _jsonRestClient.PostAsync(url, newEmployee);
             task.Wait();
             
@@ -30,7 +33,7 @@
              
             // ASSIGN
             Assert.That(result, Is.Not.Null);
-            Assert.That(result.Id, Is.EqualTo(newEmployee.Id));
+            Assert.That(result.Id, Is.EqualTo(++maxId));
             Assert.That(result.FirstName, Is.EqualTo(newEmployee.FirstName));
             Assert.That(result.LastName, Is.EqualTo(newEmployee.LastName));
         }
@@ -40,9 +43,10 @@
         {
             // ARRANGE
             var url = new Uri(_baseUrl + "/api/employees");
+            var maxId = EmployeesController.Employees.Max(e => e.Id);
 
             // ACT
-            var newEmployee = new Employee { Id = 3, FirstName = "Alex", LastName = "Chauhan" };
+            var newEmployee = new Employee { FirstName = "Alex", LastName = "Chauhan" };
             var task = _xmlRestClient.PostAsync(url, newEmployee);
             task.Wait();
 
@@ -50,7 +54,7 @@
 
             // ASSIGN
             Assert.That(result, Is.Not.Null);
-            Assert.That(result.Id, Is.EqualTo(newEmployee.Id));
+            Assert.That(result.Id, Is.EqualTo(++maxId));
             Assert.That(result.FirstName, Is.EqualTo(newEmployee.FirstName));
             Assert.That(result.LastName, Is.EqualTo(newEmployee.LastName));
         }

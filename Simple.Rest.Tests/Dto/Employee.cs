@@ -21,7 +21,7 @@
 
         public override int GetHashCode()
         {
-            return Id;
+            return Id ?? 0;
         }
 
         public static bool operator ==(Employee left, Employee right)
@@ -34,7 +34,7 @@
             return !Equals(left, right);
         }
 
-        public int Id { get; set; }
+        public int? Id { get; set; }
 
         public string FirstName { get; set; }
 
