@@ -10,12 +10,6 @@ Supported versions:
 	.NET framework 4.0 and higher,
 	Silverlight 5.0
 
-Supported versions for 0.2.0.0 (beta):
-
-	.NET framework 4.0 and higher,
-	Silverlight 4.0 and higher,
-	Windows Phone 7.5 and higher
-
  You can skip the intro and go straight to the [Getting Started] (https://github.com/oriches/Simple.Rest/wiki/Getting-Started) guide.
 
 # Introduction
