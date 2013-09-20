@@ -32,9 +32,8 @@ Using Simple.Rest the code to call the RESTful JSON web service would be:
     var url = new Uri("http://localhost:8080/api/employees/1");
     var restClient = new RestClient(new JsonSerializer());
             
-    var task = restClient.GetAsync<Employee>(url);
-    task.Wait();
-        
+    var task = await restClient.GetAsync<Employee>(url);
+    
     var employee = task.Result.Resource;
 ```
 Similarly to call a RESTful XML web service would be:
@@ -42,9 +41,8 @@ Similarly to call a RESTful XML web service would be:
     var url = new Uri("http://localhost:8080/api/employees/1");
     var restClient = new RestClient(new XmlSerializer());
             
-    var task = restClient.GetAsync<Employee>(url);
-    task.Wait();
-        
+    var task = await restClient.GetAsync<Employee>(url);
+    
     var employee = task.Result.Resource;
 ```
 As you can see from the examples above the library makes use of the Task<T> metaphor from the .Net framework to execute the asynchronous request over the wire.
