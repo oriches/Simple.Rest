@@ -3,6 +3,9 @@ Simple.Rest
 
 A .Net Portable Class Library to simplify the calling of a RESTful web service from a .Net client application.
 
+For more information about the releases see [Release Info] (https://github.com/oriches/Simple.Rest/wiki/Release-Info) guide.
+
+
 Currently we support the following .Net versions:
 
 Supported versions:
