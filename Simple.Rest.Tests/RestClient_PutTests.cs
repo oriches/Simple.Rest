@@ -41,7 +41,7 @@
         }
 
         [Test]
-        public void should_put_json_object_with_compression()
+        public void should_put_json_object_with_gzip_compression()
         {
             // ARRANGE
             var url = new Uri(_baseUrl + "/api/employees/1");
@@ -49,6 +49,33 @@
 
             _jsonRestClient.Headers.Add("Accept-Encoding", "gzip");
             _jsonRestClient.Headers.Add("Content-Encoding", "gzip");
+
+            // ACT
+            employee.FirstName = "Ollie";
+
+            var task = _jsonRestClient.PutAsync(url, employee);
+            task.Wait();
+
+            var response = task.Result;
+
+            // ASSIGN
+            var updatedEmployee = GetEmployee(url);
+
+            Assert.That(response, Is.Not.Null);
+            Assert.That(updatedEmployee.Id, Is.EqualTo(employee.Id));
+            Assert.That(updatedEmployee.FirstName, Is.EqualTo(employee.FirstName));
+            Assert.That(updatedEmployee.LastName, Is.EqualTo(employee.LastName));
+        }
+
+        [Test]
+        public void should_put_json_object_with_deflate_compression()
+        {
+            // ARRANGE
+            var url = new Uri(_baseUrl + "/api/employees/1");
+            var employee = GetEmployee(url);
+
+            _jsonRestClient.Headers.Add("Accept-Encoding", "deflate");
+            _jsonRestClient.Headers.Add("Content-Encoding", "deflate");
 
             // ACT
             employee.FirstName = "Oliver";
@@ -71,7 +98,7 @@
         public void should_put_xml_object()
         {
             // ARRANGE
-            var url = new Uri(_baseUrl + "/api/employees/1");
+            var url = new Uri(_baseUrl + "/api/employees/2");
             var employee = GetEmployee(url);
 
             // ACT
@@ -92,7 +119,7 @@
         }
 
         [TestFixtureSetUp]
-        public void SetUp()
+        public void FixtureSetUp()
         {
             _baseUrl = string.Format("http://{0}:8081", Environment.MachineName);
 
@@ -100,6 +127,12 @@
 
             _jsonRestClient = new RestClient(new JsonSerializer());
             _xmlRestClient = new RestClient(new XmlSerializer());
+        }
+
+        [SetUp]
+        public void SetUp()
+        {
+            _jsonRestClient.Headers.Clear();
         }
 
         [TestFixtureTearDown]

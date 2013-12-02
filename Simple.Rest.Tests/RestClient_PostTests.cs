@@ -40,7 +40,7 @@
         }
 
         [Test]
-        public void should_post_json_object_wth_compression()
+        public void should_post_json_object_wth_gzip_compression()
         {
             // ARRANGE
             var url = new Uri(_baseUrl + "/api/employees");
@@ -48,6 +48,30 @@
 
             _jsonRestClient.Headers.Add("Accept-Encoding", "gzip");
             _jsonRestClient.Headers.Add("Content-Encoding", "gzip");
+
+            // ACT
+            var newEmployee = new Employee { FirstName = "Alex", LastName = "Chauhan" };
+            var task = _jsonRestClient.PostAsync(url, newEmployee);
+            task.Wait();
+
+            var result = task.Result.Resource;
+
+            // ASSIGN
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Id, Is.EqualTo(++maxId));
+            Assert.That(result.FirstName, Is.EqualTo(newEmployee.FirstName));
+            Assert.That(result.LastName, Is.EqualTo(newEmployee.LastName));
+        }
+
+        [Test]
+        public void should_post_json_object_wth_deflate_compression()
+        {
+            // ARRANGE
+            var url = new Uri(_baseUrl + "/api/employees");
+            var maxId = EmployeesController.Employees.Max(e => e.Id);
+
+            _jsonRestClient.Headers.Add("Accept-Encoding", "deflate");
+            _jsonRestClient.Headers.Add("Content-Encoding", "deflate");
 
             // ACT
             var newEmployee = new Employee { FirstName = "Alex", LastName = "Chauhan" };
@@ -85,7 +109,7 @@
         }
 
         [TestFixtureSetUp]
-        public void SetUp()
+        public void FixtureSetUp()
         {
             _baseUrl = string.Format("http://{0}:8082", Environment.MachineName);
 
@@ -93,6 +117,12 @@
 
             _jsonRestClient = new RestClient(new JsonSerializer());
             _xmlRestClient = new RestClient(new XmlSerializer());
+        }
+
+        [SetUp]
+        public void SetUp()
+        {
+            _jsonRestClient.Headers.Clear();
         }
 
         [TestFixtureTearDown]
