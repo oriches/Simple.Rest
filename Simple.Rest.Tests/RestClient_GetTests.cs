@@ -8,6 +8,7 @@
     using System.Reactive.Threading.Tasks;
     using System.Threading;
     using Dto;
+    using Infrastructure;
     using Microsoft.Reactive.Testing;
     using NUnit.Framework;
     using Rest;
@@ -246,6 +247,50 @@
 
             // ASSERT
             Assert.That(requestCookie, Is.EqualTo(responseCookie));
+        }
+
+        [Test]
+        public void should_return_single_json_object_with_gzip_compressions()
+        {
+            // ARRANGE
+            var employees = _testService.Employees;
+            var url = new Uri(_baseUrl + "/api/employees/1");
+
+            _jsonRestClient.Headers.Add("Accept-encoding", "gzip");
+
+            // ACT
+            var task = _jsonRestClient.GetAsync<Employee>(url);
+            task.Wait();
+
+            var employee = task.Result.Resource;
+
+            // ASSERT
+            Assert.That(employee, Is.Not.Null);
+            Assert.That(employee.Id, Is.EqualTo(employees.First().Id));
+            Assert.That(employee.FirstName, Is.EqualTo(employees.First().FirstName));
+            Assert.That(employee.LastName, Is.EqualTo(employees.First().LastName));
+        }
+
+        [Test]
+        public void should_return_single_json_object_with_deflate_compressions()
+        {
+            // ARRANGE
+            var employees = _testService.Employees;
+            var url = new Uri(_baseUrl + "/api/employees/1");
+
+            _jsonRestClient.Headers.Add("Accept-Encoding", "deflate");
+
+            // ACT
+            var task = _jsonRestClient.GetAsync<Employee>(url);
+            task.Wait();
+
+            var employee = task.Result.Resource;
+
+            // ASSERT
+            Assert.That(employee, Is.Not.Null);
+            Assert.That(employee.Id, Is.EqualTo(employees.First().Id));
+            Assert.That(employee.FirstName, Is.EqualTo(employees.First().FirstName));
+            Assert.That(employee.LastName, Is.EqualTo(employees.First().LastName));
         }
         
         [TestFixtureSetUp]

@@ -4,12 +4,13 @@
     using System.Net;
     using System;
     using System.Threading.Tasks;
+    using Ionic.Zlib;
     using Serializers;
     using Extensions;
 
-    public class RestClient : IRestClient
+    public sealed class RestClient : IRestClient
     {
-        protected enum HttpMethod
+        internal enum HttpMethod
         {
             Get,
             Post,
@@ -41,27 +42,27 @@
 
         public ICredentials Credentials { get; set; }
 
-        public virtual Task<IRestResponse<T>> GetAsync<T>(Uri url) where T : class
+        public Task<IRestResponse<T>> GetAsync<T>(Uri url) where T : class
         {
             return ExecuteRequest<T>(url, HttpMethod.Get);
         }
 
-        public virtual Task<IRestResponse> PutAsync<T>(Uri url, T resource) where T : class
+        public Task<IRestResponse> PutAsync<T>(Uri url, T resource) where T : class
         {
             return ExecuteRequest(url, HttpMethod.Put, resource);
         }
 
-        public virtual Task<IRestResponse<T>> PostAsync<T>(Uri url, T resource) where T : class
+        public Task<IRestResponse<T>> PostAsync<T>(Uri url, T resource) where T : class
         {
             return ExecuteRequest<T, T>(url, HttpMethod.Post, resource);
         }
 
-        public virtual Task<IRestResponse> DeleteAsync(Uri url)
+        public Task<IRestResponse> DeleteAsync(Uri url)
         {
             return ExecuteRequest(url, HttpMethod.Delete);
         }
 
-        protected virtual Task<IRestResponse> ExecuteRequest(Uri url, HttpMethod method)
+        private Task<IRestResponse> ExecuteRequest(Uri url, HttpMethod method)
         {
             var request = CreateRequest(url, method);
             var task = NoBodyRequest(request);
@@ -69,7 +70,7 @@
             return task;
         }
 
-        protected virtual Task<IRestResponse> ExecuteRequest<T>(Uri url, HttpMethod method, T resource) where T : class
+        private Task<IRestResponse> ExecuteRequest<T>(Uri url, HttpMethod method, T resource) where T : class
         {
             var request = CreateRequest(url, method);
             var task = WithBodyRequest(request, resource);
@@ -77,7 +78,7 @@
             return task;
         }
 
-        protected virtual Task<IRestResponse<T>> ExecuteRequest<T>(Uri url, HttpMethod method) where T : class
+        private Task<IRestResponse<T>> ExecuteRequest<T>(Uri url, HttpMethod method) where T : class
         {
             var request = CreateRequest(url, method);
             var task = NoBodyRequest<T>(request);
@@ -85,7 +86,7 @@
             return task;
         }
 
-        protected virtual Task<IRestResponse<TResponse>> ExecuteRequest<TRequest, TResponse>(Uri url, HttpMethod method, TRequest resource)
+        private Task<IRestResponse<TResponse>> ExecuteRequest<TRequest, TResponse>(Uri url, HttpMethod method, TRequest resource)
             where TRequest : class
             where TResponse : class
         {
@@ -95,7 +96,7 @@
             return task;
         }
 
-        protected virtual HttpWebRequest CreateRequest(Uri url, HttpMethod method)
+        private HttpWebRequest CreateRequest(Uri url, HttpMethod method)
         {
             var request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = method.ToString();
@@ -151,7 +152,7 @@
             return await tcs.Task;
         }
 
-        private async Task<IRestResponse> NoBodyRequest(HttpWebRequest request)
+        private static async Task<IRestResponse> NoBodyRequest(HttpWebRequest request)
         {
             var tcs = new TaskCompletionSource<RestResponse>();
 
@@ -194,10 +195,7 @@
                 var body = Serialize(resource);
                 request.ContentType = RequestSerializer.ContentType;
 
-                using (var requestStream = new BinaryWriter(await request.GetRequestStreamAsync()))
-                {
-                    requestStream.Write(body, 0, body.Length);
-                }
+                await WriteToRequestStream(request, body);
 
                 HttpWebResponse response = null;
                 try
@@ -234,10 +232,7 @@
                 var body = Serialize(resource);
                 request.ContentType = RequestSerializer.ContentType;
 
-                using (var requestStream = new BinaryWriter(await request.GetRequestStreamAsync()))
-                {
-                    requestStream.Write(body, 0, body.Length);
-                }
+                await WriteToRequestStream(request, body);
 
                 HttpWebResponse response = null;
                 try
@@ -265,10 +260,49 @@
             return await tcs.Task;
         }
 
+        private static async Task WriteToRequestStream(HttpWebRequest request, byte[] body)
+        {
+            using (var requestStream = new BinaryWriter(await request.GetRequestStreamAsync()))
+            {
+                if (ShouldCompressWithGzip(request))
+                {
+                    var compressedBody = GZipStream.CompressBuffer(body);
+                    requestStream.Write(compressedBody, 0, compressedBody.Length);
+                }
+                else if (ShouldCompressWithDeflate(request))
+                {
+                    var compressedBody = DeflateStream.CompressBuffer(body);
+                    requestStream.Write(compressedBody, 0, compressedBody.Length);
+                }
+                else
+                {
+                    requestStream.Write(body, 0, body.Length);
+                }
+            }
+        }
+
         private RestResponse<T> ProcessResponse<T>(HttpWebResponse response) where T : class
         {
             try
             {
+                if (IsGzipCompressed(response))
+                {
+                    using (var stream = new GZipStream(response.GetResponseStream(), CompressionMode.Decompress))
+                    {
+                        var result = Deserialize<T>(stream);
+                        return new RestResponse<T>(response, result);
+                    }
+                }
+                
+                if (IsDeflateCompressed(response))
+                {
+                    using (var stream = new DeflateStream(response.GetResponseStream(), CompressionMode.Decompress))
+                    {
+                        var result = Deserialize<T>(stream);
+                        return new RestResponse<T>(response, result);
+                    }
+                }
+
                 using (var stream = response.GetResponseStream())
                 {
                     var result = Deserialize<T>(stream);
@@ -281,7 +315,31 @@
             }
         }
 
-        protected byte[] Serialize<T>(T resource) where T : class
+        private static bool IsGzipCompressed(HttpWebResponse response)
+        {
+            var encoding = response.Headers["Content-Encoding"];
+            return !string.IsNullOrEmpty(encoding) && encoding.ToLower().Contains("gzip");
+        }
+
+        private static bool IsDeflateCompressed(HttpWebResponse response)
+        {
+            var encoding = response.Headers["Content-Encoding"];
+            return !string.IsNullOrEmpty(encoding) && encoding.ToLower().Contains("deflate");
+        }
+
+        private static bool ShouldCompressWithGzip(HttpWebRequest request)
+        {
+            var encoding = request.Headers["Accept-Encoding"];
+            return !string.IsNullOrEmpty(encoding) && encoding.ToLower().Contains("gzip");
+        }
+
+        private static bool ShouldCompressWithDeflate(HttpWebRequest request)
+        {
+            var encoding = request.Headers["Accept-Encoding"];
+            return !string.IsNullOrEmpty(encoding) && encoding.ToLower().Contains("deflate");
+        }
+
+        private byte[] Serialize<T>(T resource) where T : class
         {
             byte[] result;
 
@@ -294,7 +352,7 @@
             return result;
         }
 
-        protected T Deserialize<T>(Stream stream) where T : class
+        private T Deserialize<T>(Stream stream) where T : class
         {
             var result = ResponseSerializer.Deserialize<T>(stream);
 

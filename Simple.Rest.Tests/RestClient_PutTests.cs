@@ -2,6 +2,7 @@
 {
     using System;
     using Dto;
+    using Infrastructure;
     using NUnit.Framework;
     using Rest;
     using Serializers;
@@ -33,6 +34,33 @@
             // ASSIGN
             var updatedEmployee = GetEmployee(url);
             
+            Assert.That(response, Is.Not.Null);
+            Assert.That(updatedEmployee.Id, Is.EqualTo(employee.Id));
+            Assert.That(updatedEmployee.FirstName, Is.EqualTo(employee.FirstName));
+            Assert.That(updatedEmployee.LastName, Is.EqualTo(employee.LastName));
+        }
+
+        [Test]
+        public void should_put_json_object_with_compression()
+        {
+            // ARRANGE
+            var url = new Uri(_baseUrl + "/api/employees/1");
+            var employee = GetEmployee(url);
+
+            _jsonRestClient.Headers.Add("Accept-Encoding", "gzip");
+            _jsonRestClient.Headers.Add("Content-Encoding", "gzip");
+
+            // ACT
+            employee.FirstName = "Oliver";
+
+            var task = _jsonRestClient.PutAsync(url, employee);
+            task.Wait();
+
+            var response = task.Result;
+
+            // ASSIGN
+            var updatedEmployee = GetEmployee(url);
+
             Assert.That(response, Is.Not.Null);
             Assert.That(updatedEmployee.Id, Is.EqualTo(employee.Id));
             Assert.That(updatedEmployee.FirstName, Is.EqualTo(employee.FirstName));

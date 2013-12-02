@@ -2,6 +2,7 @@
 {
     using System;
     using System.Net;
+    using Infrastructure;
     using NUnit.Framework;
     using Rest;
     using Serializers;
