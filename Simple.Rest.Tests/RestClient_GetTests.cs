@@ -256,7 +256,7 @@
             var employees = _testService.Employees;
             var url = new Uri(_baseUrl + "/api/employees/1");
 
-            _jsonRestClient.Headers.Add("Accept-encoding", "gzip");
+            _jsonRestClient.Headers.Add("Accept-Encoding", "gzip");
 
             // ACT
             var task = _jsonRestClient.GetAsync<Employee>(url);
