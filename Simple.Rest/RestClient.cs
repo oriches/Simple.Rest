@@ -1,5 +1,6 @@
 ﻿namespace Simple.Rest
 {
+    using System.Diagnostics.Contracts;
     using System.IO;
     using System.Net;
     using System;
@@ -18,11 +19,26 @@
             Delete
         }
 
+        /// <summary>
+        /// Creates an instance with the JSON serializer.
+        /// </summary>
+        public RestClient()
+            : this(new JsonSerializer(), new JsonSerializer())
+        {
+        }
+
+        /// <summary>
+        /// Creates an instance with a customer serializer, e.g. XML or JSON.
+        /// </summary>
+        /// <param name="serializer"></param>
         public RestClient(ISerializer serializer)
             : this(serializer, serializer)
         {
         }
 
+        /// <summary>
+        /// Creates an instance with specifiic serializers for requests & responses.
+        /// </summary>
         public RestClient(ISerializer requestSerializer, ISerializer responseSerializer)
         {
             RequestSerializer = requestSerializer;
@@ -32,31 +48,72 @@
             Cookies = new CookieCollection();
         }
 
-        public ISerializer RequestSerializer { get; set; }
+        /// <summary>
+        /// Serializer used for request resource types.
+        /// </summary>
+        public ISerializer RequestSerializer { get; private set; }
 
-        public ISerializer ResponseSerializer { get; set; }
+        /// <summary>
+        /// Serializer used for response resource types.
+        /// </summary>
+        public ISerializer ResponseSerializer { get; private set; }
 
-        public CookieCollection Cookies { get; set; }
+        /// <summary>
+        /// Cookies container used for the HTTP request.
+        /// </summary>
+        public CookieCollection Cookies { get; private set; }
 
-        public WebHeaderCollection Headers { get; set; }
+        /// <summary>
+        /// HTTP headers collection for the HTTP request.
+        /// </summary>
+        public WebHeaderCollection Headers { get; private set; }
 
+        /// <summary>
+        /// Credentials used for the HTTP request.
+        /// </summary>
         public ICredentials Credentials { get; set; }
-
+        
+        /// <summary>
+        /// Requests the resource asynchronuously.
+        /// </summary>
+        /// <typeparam name="T">The resource type</typeparam>
+        /// <param name="url">The URL to GET the resource</param>
+        /// <returns>Returns the resource wrapped in a Task&lt;IRestResponse<typeparam name="T"></typeparam>&gt;, the interface contains the resource, status code &amp; description, headers &amp; cookies.</returns>
         public Task<IRestResponse<T>> GetAsync<T>(Uri url) where T : class
         {
             return ExecuteRequest<T>(url, HttpMethod.Get);
         }
 
+        /// <summary>
+        /// Requests the resource be stored under the supplied URL asynchronuously. If the URL refers to an already existing resource, it is modified.
+        /// If the URL does not point to an existing resource, then the server can create the resource with that URL.
+        /// </summary>
+        /// <typeparam name="T">The resource type</typeparam>
+        /// <param name="url">The URL to PUT the resource</param>
+        /// <param name="resource">The resource to be PUT</param>
+        /// <returns>Returns the resource wrapped in a Task&lt;IRestResponse<typeparam name="T"></typeparam>&gt;, the interface contains the resource, status code &amp; description, headers &amp; cookies.</returns>
         public Task<IRestResponse> PutAsync<T>(Uri url, T resource) where T : class
         {
             return ExecuteRequest(url, HttpMethod.Put, resource);
         }
 
+        /// <summary>
+        /// Requests the server accept the resource asynchronuously. The resource is identified by the URL.
+        /// </summary>
+        /// <typeparam name="T">The resource type</typeparam>
+        /// <param name="url">The URL to POST the resource</param>
+        /// <param name="resource">The resource to be POST'd</param>
+        /// <returns>Returns the resource wrapped in a Task&lt;IRestResponse<typeparam name="T"></typeparam>&gt;, the interface contains the resource, status code &amp; description, headers &amp; cookies.</returns>
         public Task<IRestResponse<T>> PostAsync<T>(Uri url, T resource) where T : class
         {
             return ExecuteRequest<T, T>(url, HttpMethod.Post, resource);
         }
 
+        /// <summary>
+        /// Deletes a resource asynchronously. The resource is identified by the URL.
+        /// </summary>
+        /// <param name="url">The URL to GET the resource</param>
+        /// <returns>Returns the result in a Task&lt;IRestResponse&gt;, the interface contains the status code &amp; description, headers &amp; cookies.</returns>
         public Task<IRestResponse> DeleteAsync(Uri url)
         {
             return ExecuteRequest(url, HttpMethod.Delete);
@@ -102,13 +159,13 @@
             request.Method = method.ToString();
             request.Accept = ResponseSerializer.ContentType;
 
-            if (Cookies != null && Cookies.Count != 0)
+            if (Cookies.Count != 0)
             {
                 request.CookieContainer = new CookieContainer();
                 request.CookieContainer.Add(url, Cookies);
             }
 
-            if (Headers != null && Headers.Count != 0)
+            if (Headers.Count != 0)
             {
                 request.Headers = Headers;
             }
@@ -283,6 +340,8 @@
 
         private RestResponse<T> ProcessResponse<T>(HttpWebResponse response) where T : class
         {
+            Contract.Requires<ArgumentNullException>(response != null);
+
             try
             {
                 if (IsGzipCompressed(response))
@@ -315,32 +374,42 @@
             }
         }
 
-        private static bool IsGzipCompressed(HttpWebResponse response)
+        private static bool IsGzipCompressed(WebResponse response)
         {
+            Contract.Requires<ArgumentNullException>(response != null);
+
             var encoding = response.Headers["Content-Encoding"];
             return !string.IsNullOrEmpty(encoding) && encoding.ToLower().Contains("gzip");
         }
 
-        private static bool IsDeflateCompressed(HttpWebResponse response)
+        private static bool IsDeflateCompressed(WebResponse response)
         {
+            Contract.Requires<ArgumentNullException>(response != null);
+
             var encoding = response.Headers["Content-Encoding"];
             return !string.IsNullOrEmpty(encoding) && encoding.ToLower().Contains("deflate");
         }
 
-        private static bool ShouldCompressWithGzip(HttpWebRequest request)
+        private static bool ShouldCompressWithGzip(WebRequest request)
         {
+            Contract.Requires<ArgumentNullException>(request != null);
+
             var encoding = request.Headers["Accept-Encoding"];
             return !string.IsNullOrEmpty(encoding) && encoding.ToLower().Contains("gzip");
         }
 
-        private static bool ShouldCompressWithDeflate(HttpWebRequest request)
+        private static bool ShouldCompressWithDeflate(WebRequest request)
         {
+            Contract.Requires<ArgumentNullException>(request != null);
+
             var encoding = request.Headers["Accept-Encoding"];
             return !string.IsNullOrEmpty(encoding) && encoding.ToLower().Contains("deflate");
         }
 
         private byte[] Serialize<T>(T resource) where T : class
         {
+            Contract.Requires<ArgumentNullException>(resource != null);
+
             byte[] result;
 
             using (var stream = RequestSerializer.Serialize(resource))
@@ -354,6 +423,8 @@
 
         private T Deserialize<T>(Stream stream) where T : class
         {
+            Contract.Requires<ArgumentNullException>(stream != null);
+
             var result = ResponseSerializer.Deserialize<T>(stream);
 
             return result;

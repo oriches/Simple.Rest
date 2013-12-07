@@ -1,7 +1,9 @@
 namespace Simple.Rest.Serializers
 {
+    using System.Diagnostics.Contracts;
     using System.IO;
 
+    [ContractClass(typeof(SerializerContract))]
     public interface ISerializer
     {
         string ContentType { get; }

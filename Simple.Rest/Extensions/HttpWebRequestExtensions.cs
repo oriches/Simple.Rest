@@ -1,6 +1,7 @@
 namespace Simple.Rest.Extensions
 {
     using System;
+    using System.Diagnostics.Contracts;
     using System.IO;
     using System.Net;
     using System.Threading.Tasks;
@@ -9,6 +10,8 @@ namespace Simple.Rest.Extensions
     {
         public static Task<Stream> GetRequestStreamAsync(this HttpWebRequest request)
         {
+            Contract.Requires<ArgumentNullException>(request != null);
+
             var tcs = new TaskCompletionSource<Stream>();
 
             try
@@ -36,6 +39,8 @@ namespace Simple.Rest.Extensions
 
         public static Task<HttpWebResponse> GetResponseAsync(this HttpWebRequest request)
         {
+            Contract.Requires<ArgumentNullException>(request != null);
+
             var tcs = new TaskCompletionSource<HttpWebResponse>();
 
             try

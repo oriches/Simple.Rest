@@ -2,6 +2,7 @@
 {
     using System;
     using Dto;
+    using Extensions;
     using Infrastructure;
     using NUnit.Framework;
     using Rest;
@@ -47,13 +48,12 @@
             var url = new Uri(_baseUrl + "/api/employees/1");
             var employee = GetEmployee(url);
 
-            _jsonRestClient.Headers.Add("Accept-Encoding", "gzip");
-            _jsonRestClient.Headers.Add("Content-Encoding", "gzip");
-
             // ACT
             employee.FirstName = "Ollie";
 
-            var task = _jsonRestClient.PutAsync(url, employee);
+            var task = _jsonRestClient.WithGzipEncoding()
+                .PutAsync(url, employee);
+
             task.Wait();
 
             var response = task.Result;
@@ -74,13 +74,12 @@
             var url = new Uri(_baseUrl + "/api/employees/1");
             var employee = GetEmployee(url);
 
-            _jsonRestClient.Headers.Add("Accept-Encoding", "deflate");
-            _jsonRestClient.Headers.Add("Content-Encoding", "deflate");
-
             // ACT
             employee.FirstName = "Oliver";
 
-            var task = _jsonRestClient.PutAsync(url, employee);
+            var task = _jsonRestClient.WithDeflateEncoding()
+                .PutAsync(url, employee);
+
             task.Wait();
 
             var response = task.Result;

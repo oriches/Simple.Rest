@@ -16,7 +16,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simple.Rest.Tests", "Simple
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget spec", ".nuget spec", "{121B988D-E051-4112-8962-7A2519A94927}"
 	ProjectSection(SolutionItems) = preProject
-		Simple.Rest.0.10.0.0.nupkg = Simple.Rest.0.10.0.0.nupkg
+		Simple.Rest.0.11.0.0.nupkg = Simple.Rest.0.11.0.0.nupkg
 	EndProjectSection
 EndProject
 Global

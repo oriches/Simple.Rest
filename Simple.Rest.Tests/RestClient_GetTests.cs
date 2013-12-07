@@ -8,6 +8,7 @@
     using System.Reactive.Threading.Tasks;
     using System.Threading;
     using Dto;
+    using Extensions;
     using Infrastructure;
     using Microsoft.Reactive.Testing;
     using NUnit.Framework;
@@ -237,7 +238,7 @@
             var url = new Uri(_baseUrl + "/api/employees/1");
 
             var requestCookie = new Cookie("TestCookie", Guid.NewGuid().ToString());
-            _jsonRestClient.Cookies.Add(requestCookie);
+            _jsonRestClient.WithCookie(requestCookie);
 
             // ACT
             var task = _jsonRestClient.GetAsync<Employee>(url);
@@ -256,10 +257,10 @@
             var employees = _testService.Employees;
             var url = new Uri(_baseUrl + "/api/employees/1");
 
-            _jsonRestClient.Headers.Add("Accept-Encoding", "gzip");
-
             // ACT
-            var task = _jsonRestClient.GetAsync<Employee>(url);
+            var task = _jsonRestClient.WithGzipEncoding()
+                .GetAsync<Employee>(url);
+
             task.Wait();
 
             var employee = task.Result.Resource;
@@ -278,10 +279,10 @@
             var employees = _testService.Employees;
             var url = new Uri(_baseUrl + "/api/employees/1");
 
-            _jsonRestClient.Headers.Add("Accept-Encoding", "deflate");
-
             // ACT
-            var task = _jsonRestClient.GetAsync<Employee>(url);
+            var task = _jsonRestClient.WithDeflateEncoding()
+                .GetAsync<Employee>(url);
+
             task.Wait();
 
             var employee = task.Result.Resource;

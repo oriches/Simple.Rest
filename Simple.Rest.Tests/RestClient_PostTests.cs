@@ -4,6 +4,7 @@
     using System.Linq;
     using Controllers;
     using Dto;
+    using Extensions;
     using Infrastructure;
     using NUnit.Framework;
     using Rest;
@@ -46,12 +47,11 @@
             var url = new Uri(_baseUrl + "/api/employees");
             var maxId = EmployeesController.Employees.Max(e => e.Id);
 
-            _jsonRestClient.Headers.Add("Accept-Encoding", "gzip");
-            _jsonRestClient.Headers.Add("Content-Encoding", "gzip");
-
             // ACT
             var newEmployee = new Employee { FirstName = "Alex", LastName = "Chauhan" };
-            var task = _jsonRestClient.PostAsync(url, newEmployee);
+            var task = _jsonRestClient.WithGzipEncoding()
+                .PostAsync(url, newEmployee);
+
             task.Wait();
 
             var result = task.Result.Resource;
@@ -70,12 +70,11 @@
             var url = new Uri(_baseUrl + "/api/employees");
             var maxId = EmployeesController.Employees.Max(e => e.Id);
 
-            _jsonRestClient.Headers.Add("Accept-Encoding", "deflate");
-            _jsonRestClient.Headers.Add("Content-Encoding", "deflate");
-
             // ACT
             var newEmployee = new Employee { FirstName = "Alex", LastName = "Chauhan" };
-            var task = _jsonRestClient.PostAsync(url, newEmployee);
+            var task = _jsonRestClient.WithDeflateEncoding()
+                .PostAsync(url, newEmployee);
+
             task.Wait();
 
             var result = task.Result.Resource;
