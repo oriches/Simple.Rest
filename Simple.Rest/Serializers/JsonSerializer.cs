@@ -6,6 +6,7 @@ namespace Simple.Rest.Serializers
     using System.Text;
     using Newtonsoft.Json;
 
+    [Pure]
     public sealed class JsonSerializer : ISerializer
     {
         private readonly Newtonsoft.Json.JsonSerializer _serializer;
@@ -19,6 +20,7 @@ namespace Simple.Rest.Serializers
             ContentType = "application/json";
         }
 
+        [Pure]
         public Stream Serialize<T>(T instance) where  T : class
         {
             var writer = new StreamWriter(new MemoryStream(), Encoding.UTF8);
@@ -30,6 +32,7 @@ namespace Simple.Rest.Serializers
             return writer.BaseStream;
         }
 
+        [Pure]
         public T Deserialize<T>(Stream stream)
         {
             var serializer = new Newtonsoft.Json.JsonSerializer();

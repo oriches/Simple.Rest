@@ -79,6 +79,7 @@
         /// <typeparam name="T">The resource type</typeparam>
         /// <param name="url">The URL to GET the resource</param>
         /// <returns>Returns the resource wrapped in a Task&lt;IRestResponse<typeparam name="T"></typeparam>&gt;, the interface contains the resource, status code &amp; description, headers &amp; cookies.</returns>
+        [Pure]
         public Task<IRestResponse<T>> GetAsync<T>(Uri url) where T : class
         {
             return ExecuteRequest<T>(url, HttpMethod.Get);
@@ -92,6 +93,7 @@
         /// <param name="url">The URL to PUT the resource</param>
         /// <param name="resource">The resource to be PUT</param>
         /// <returns>Returns the resource wrapped in a Task&lt;IRestResponse<typeparam name="T"></typeparam>&gt;, the interface contains the resource, status code &amp; description, headers &amp; cookies.</returns>
+        [Pure]
         public Task<IRestResponse> PutAsync<T>(Uri url, T resource) where T : class
         {
             return ExecuteRequest(url, HttpMethod.Put, resource);
@@ -104,6 +106,7 @@
         /// <param name="url">The URL to POST the resource</param>
         /// <param name="resource">The resource to be POST'd</param>
         /// <returns>Returns the resource wrapped in a Task&lt;IRestResponse<typeparam name="T"></typeparam>&gt;, the interface contains the resource, status code &amp; description, headers &amp; cookies.</returns>
+        [Pure]
         public Task<IRestResponse<T>> PostAsync<T>(Uri url, T resource) where T : class
         {
             return ExecuteRequest<T, T>(url, HttpMethod.Post, resource);
@@ -114,6 +117,7 @@
         /// </summary>
         /// <param name="url">The URL to GET the resource</param>
         /// <returns>Returns the result in a Task&lt;IRestResponse&gt;, the interface contains the status code &amp; description, headers &amp; cookies.</returns>
+        [Pure]
         public Task<IRestResponse> DeleteAsync(Uri url)
         {
             return ExecuteRequest(url, HttpMethod.Delete);

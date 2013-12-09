@@ -1,8 +1,10 @@
 namespace Simple.Rest.Serializers
 {
+    using System.Diagnostics.Contracts;
     using System.IO;
     using System.Runtime.Serialization;
 
+    [Pure]
     public sealed class XmlSerializer : ISerializer
     {
         public string ContentType { get; private set; }
@@ -12,6 +14,7 @@ namespace Simple.Rest.Serializers
             ContentType = "application/xml";
         }
 
+        [Pure]
         public Stream Serialize<T>(T instance) where T : class
         {
             var serializer = new DataContractSerializer(typeof(T));
@@ -23,7 +26,8 @@ namespace Simple.Rest.Serializers
 
             return stream;
         }
-
+        
+        [Pure]
         public T Deserialize<T>(Stream stream)
         {
             var serializer = new DataContractSerializer(typeof(T));

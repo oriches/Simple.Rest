@@ -4,6 +4,7 @@ namespace Simple.Rest
     using System.Diagnostics.Contracts;
     using System.Net;
 
+    [Pure]
     public class RestResponse : IRestResponse
     {
         /// <summary>
