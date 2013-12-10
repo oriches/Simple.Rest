@@ -1,9 +1,11 @@
 namespace Simple.Rest
 {
     using System;
-    using System.Diagnostics.Contracts;
     using System.Net;
 
+    /// <summary>
+    /// The response from the RestClient, contains all the HTTP related statuses, cookies &amp; headers.
+    /// </summary>
     public interface IRestResponse
     {
         /// <summary>

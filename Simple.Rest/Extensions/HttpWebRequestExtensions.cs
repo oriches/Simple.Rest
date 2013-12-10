@@ -6,8 +6,16 @@ namespace Simple.Rest.Extensions
     using System.Net;
     using System.Threading.Tasks;
 
+    /// <summary>
+    /// HTTP web request extensions - makes using HttpWebRequest easier by using Task&lt;T&gt;.
+    /// </summary>
     public static class HttpWebRequestExtensions
     {
+        /// <summary>
+        /// Async method for getting web request.
+        /// </summary>
+        /// <param name="request">The HttpWebRequest instance.</param>
+        /// <returns>The request stream asynchronuously.</returns>
         public static Task<Stream> GetRequestStreamAsync(this HttpWebRequest request)
         {
             Contract.Requires<ArgumentNullException>(request != null);
@@ -37,6 +45,11 @@ namespace Simple.Rest.Extensions
             return tcs.Task;
         }
 
+        /// <summary>
+        /// Async method for getting web response.
+        /// </summary>
+        /// <param name="request">The HttpWebRequest instance.</param>
+        /// <returns>The response stream asynchronuously.</returns>
         public static Task<HttpWebResponse> GetResponseAsync(this HttpWebRequest request)
         {
             Contract.Requires<ArgumentNullException>(request != null);

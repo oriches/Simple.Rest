@@ -7,5 +7,5 @@ using System.Reflection;
 [assembly: AssemblyCopyright("Simple.Rest Copyright © 2013")]
 [assembly: NeutralResourcesLanguage("en")]
 
-[assembly: AssemblyVersion("0.12.0.0")]
-[assembly: AssemblyFileVersion("0.12.0.0")]
+[assembly: AssemblyVersion("0.13.0.0")]
+[assembly: AssemblyFileVersion("0.13.0.0")]

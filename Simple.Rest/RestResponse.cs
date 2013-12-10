@@ -4,6 +4,9 @@ namespace Simple.Rest
     using System.Diagnostics.Contracts;
     using System.Net;
 
+    /// <summary>
+    /// The response from the RestClient, contains all the HTTP related statuses, cookies &amp; headers.
+    /// </summary>
     [Pure]
     public class RestResponse : IRestResponse
     {
@@ -40,17 +43,17 @@ namespace Simple.Rest
         /// <summary>
         /// Extracts the properties from the HTTP response.
         /// </summary>
-        /// <param name="response">The HTTP response</param>
+        /// <param name="response">The HTTP response.</param>
         public RestResponse(HttpWebResponse response) : this(response, null)
         {
             Contract.Requires<ArgumentNullException>(response != null);
         }
-
+        
         /// <summary>
         /// Extracts the properties from the HTTP response and handles the exception generated during the request.
-        /// </summary
-        /// <param name="response">The HTTP response</param>
-        /// <param name="exception">The exception generated during the HTTP request\response</param>
+        /// </summary>
+        /// <param name="response">The HTTP response.</param>
+        /// <param name="exception">The exception generated during the HTTP request\response.</param>
         public RestResponse(HttpWebResponse response, Exception exception)
         {
             Contract.Requires<ArgumentNullException>(response != null);

@@ -9,6 +9,9 @@
     using Serializers;
     using Extensions;
 
+    /// <summary>
+    /// Class for resource orientated RESTful interface, supports verbs GET, POST, PUT &amp; DELETE.
+    /// </summary>
     public sealed class RestClient : IRestClient
     {
         internal enum HttpMethod
@@ -37,7 +40,7 @@
         }
 
         /// <summary>
-        /// Creates an instance with specifiic serializers for requests & responses.
+        /// Creates an instance with specifiic serializers for requests &amp; responses.
         /// </summary>
         public RestClient(ISerializer requestSerializer, ISerializer responseSerializer)
         {
@@ -78,7 +81,7 @@
         /// </summary>
         /// <typeparam name="T">The resource type</typeparam>
         /// <param name="url">The URL to GET the resource</param>
-        /// <returns>Returns the resource wrapped in a Task&lt;IRestResponse<typeparam name="T"></typeparam>&gt;, the interface contains the resource, status code &amp; description, headers &amp; cookies.</returns>
+        /// <returns>Returns the resource wrapped in a Task&lt;IRestResponse&lt;T&gt;&gt;, the interface contains the resource, status code &amp; description, headers &amp; cookies.</returns>
         [Pure]
         public Task<IRestResponse<T>> GetAsync<T>(Uri url) where T : class
         {
@@ -92,7 +95,7 @@
         /// <typeparam name="T">The resource type</typeparam>
         /// <param name="url">The URL to PUT the resource</param>
         /// <param name="resource">The resource to be PUT</param>
-        /// <returns>Returns the resource wrapped in a Task&lt;IRestResponse<typeparam name="T"></typeparam>&gt;, the interface contains the resource, status code &amp; description, headers &amp; cookies.</returns>
+        /// <returns>Returns the resource wrapped in a Task&lt;IRestResponse&lt;T&gt;&gt;, the interface contains the resource, status code &amp; description, headers &amp; cookies.</returns>
         [Pure]
         public Task<IRestResponse> PutAsync<T>(Uri url, T resource) where T : class
         {
@@ -105,7 +108,7 @@
         /// <typeparam name="T">The resource type</typeparam>
         /// <param name="url">The URL to POST the resource</param>
         /// <param name="resource">The resource to be POST'd</param>
-        /// <returns>Returns the resource wrapped in a Task&lt;IRestResponse<typeparam name="T"></typeparam>&gt;, the interface contains the resource, status code &amp; description, headers &amp; cookies.</returns>
+        /// <returns>Returns the resource wrapped in a Task&lt;IRestResponse&lt;T&gt;&gt;, the interface contains the resource, status code &amp; description, headers &amp; cookies.</returns>
         [Pure]
         public Task<IRestResponse<T>> PostAsync<T>(Uri url, T resource) where T : class
         {

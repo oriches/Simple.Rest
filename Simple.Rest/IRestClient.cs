@@ -6,6 +6,9 @@ namespace Simple.Rest
     using System.Threading.Tasks;
     using Serializers;
 
+    /// <summary>
+    /// Interface for resource orientated RESTful interface, supports verbs GET, POST, PUT &amp; DELETE.
+    /// </summary>
     [ContractClass(typeof(RestClientContract))]
     public interface IRestClient
     {
@@ -39,7 +42,7 @@ namespace Simple.Rest
         /// </summary>
         /// <typeparam name="T">The resource type</typeparam>
         /// <param name="url">The URL to GET the resource</param>
-        /// <returns>Returns the resource wrapped in a Task&lt;IRestResponse<typeparam name="T"></typeparam>&gt;, the interface contains the resource, status code &amp; description, headers &amp; cookies.</returns>
+        /// <returns>Returns the resource wrapped in a Task&lt;IRestResponse&lt;T&gt;&gt;, the interface contains the resource, status code &amp; description, headers &amp; cookies.</returns>
         Task<IRestResponse<T>> GetAsync<T>(Uri url) where T : class;
 
         /// <summary>
@@ -49,7 +52,7 @@ namespace Simple.Rest
         /// <typeparam name="T">The resource type</typeparam>
         /// <param name="url">The URL to PUT the resource</param>
         /// <param name="resource">The resource to be PUT</param>
-        /// <returns>Returns the resource wrapped in a Task&lt;IRestResponse<typeparam name="T"></typeparam>&gt;, the interface contains the resource, status code &amp; description, headers &amp; cookies.</returns>
+        /// <returns>Returns the resource wrapped in a Task&lt;IRestResponse&lt;T&gt;&gt;, the interface contains the resource, status code &amp; description, headers &amp; cookies.</returns>
         Task<IRestResponse> PutAsync<T>(Uri url, T resource) where T : class;
 
         /// <summary>
@@ -58,7 +61,7 @@ namespace Simple.Rest
         /// <typeparam name="T">The resource type</typeparam>
         /// <param name="url">The URL to POST the resource</param>
         /// <param name="resource">The resource to be POST'd</param>
-        /// <returns>Returns the resource wrapped in a Task&lt;IRestResponse<typeparam name="T"></typeparam>&gt;, the interface contains the resource, status code &amp; description, headers &amp; cookies.</returns>
+        /// <returns>Returns the resource wrapped in a Task&lt;IRestResponse&lt;T&gt;&gt;, the interface contains the resource, status code &amp; description, headers &amp; cookies.</returns>
         Task<IRestResponse<T>> PostAsync<T>(Uri url, T resource) where T : class;
 
         /// <summary>

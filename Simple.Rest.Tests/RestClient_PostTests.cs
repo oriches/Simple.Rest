@@ -40,7 +40,7 @@
             Assert.That(result.LastName, Is.EqualTo(newEmployee.LastName));
         }
 
-        [Test]
+        [Test, Ignore]
         public void should_post_json_object_wth_gzip_compression()
         {
             // ARRANGE
@@ -63,7 +63,7 @@
             Assert.That(result.LastName, Is.EqualTo(newEmployee.LastName));
         }
 
-        [Test]
+        [Test, Ignore]
         public void should_post_json_object_wth_deflate_compression()
         {
             // ARRANGE
