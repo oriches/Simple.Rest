@@ -11,6 +11,8 @@ Supported versions:
 
 	.NET framework 4.0 and higher,
 	Silverlight 5.0
+	
+This library is available as a nuget [package] (https://nuget.org/packages/Simple.Rest).
 
 You can skip the intro and go straight to the [Getting Started] (https://github.com/oriches/Simple.Rest/wiki/Getting-Started) guide.
 
@@ -50,9 +52,3 @@ Similarly to call a RESTful XML web service would be:
 As you can see from the examples above the library makes use of the Task<T> metaphor from the .Net framework to execute the asynchronous request over the wire.
 
 The library was developed using TDD principles and has a set of test in the solution for all the main HTTP operations GET, POST, PUT & DELETE. For more information see the [Getting Started] (https://github.com/oriches/Simple.Rest/wiki/Getting-Started) guide.
-
-Available for download from NuGet:
-
-https://nuget.org/packages/Simple.Rest
-
-
