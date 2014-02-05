@@ -357,7 +357,7 @@
                     {
                         var result = Deserialize<T>(stream);
                         return new RestResponse<T>(response, result);
-                    }
+                    } 
                 }
                 
                 if (IsDeflateCompressed(response))
