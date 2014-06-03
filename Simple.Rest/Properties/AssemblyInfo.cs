@@ -4,8 +4,8 @@ using System.Reflection;
 [assembly: AssemblyTitle("Simple.Rest")]
 [assembly: AssemblyDescription("Simple Rest Client-side Library")]
 [assembly: AssemblyProduct("Simple.Rest")]
-[assembly: AssemblyCopyright("Simple.Rest Copyright © 2013")]
+[assembly: AssemblyCopyright("Simple.Rest Copyright © 2014")]
 [assembly: NeutralResourcesLanguage("en")]
 
-[assembly: AssemblyVersion("0.15.0.0")]
-[assembly: AssemblyFileVersion("0.15.0.0")]
+[assembly: AssemblyVersion("0.16.0.0")]
+[assembly: AssemblyFileVersion("0.16.0.0")]
