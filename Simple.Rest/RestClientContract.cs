@@ -42,6 +42,16 @@ namespace Simple.Rest
             return null;
         }
 
+        public Task<IRestResponse<R>> PostAsync<T, R>(Uri url, T resource)
+						where T : class
+						where R : class
+        {
+            Contract.Requires<ArgumentNullException>(url != null);
+            Contract.Requires<ArgumentNullException>(resource != null);
+
+            return null;
+        }
+
         public Task<IRestResponse> DeleteAsync(Uri url)
         {
             Contract.Requires<ArgumentNullException>(url != null);
