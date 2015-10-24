@@ -116,6 +116,22 @@
         }
 
         /// <summary>
+				/// Requests the server accept the resource asynchronuously and receives a disparate return type. The resource is identified by the URL.
+				/// </summary>
+				/// <typeparam name="T">The resource type</typeparam>
+				/// <typeparam name="R">The return type</typeparam>
+				/// <param name="url">The URL to POST the resource</param>
+				/// <param name="resource">The resource to be POST'd</param>
+				/// <returns>Returns the return type wrapped in a Task&lt;IRestResponse&lt;&gt;&gt;, the interface contains the return, status code &amp; description, headers &amp; cookies.</returns>
+				[Pure]
+        public Task<IRestResponse<R>> PostAsync<T, R>(Uri url, T resource)
+						where T : class
+						where R : class
+        {
+            return ExecuteRequest<T, R>(url, HttpMethod.Post, resource);
+        }
+
+        /// <summary>
         /// Deletes a resource asynchronously. The resource is identified by the URL.
         /// </summary>
         /// <param name="url">The URL to GET the resource</param>
