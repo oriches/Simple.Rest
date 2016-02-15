@@ -2,7 +2,7 @@
 using System.Reflection;
 
 [assembly: AssemblyTitle("Simple.Rest")]
-[assembly: AssemblyDescription("Simple Rest Client-side Library")]
+[assembly: AssemblyDescription("Simple Rest Library")]
 [assembly: AssemblyProduct("Simple.Rest")]
 [assembly: AssemblyCopyright("Simple.Rest Copyright © 2015")]
 [assembly: NeutralResourcesLanguage("en")]

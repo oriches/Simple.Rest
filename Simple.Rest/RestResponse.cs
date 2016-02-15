@@ -13,32 +13,32 @@ namespace Simple.Rest
         /// <summary>
         /// The status code of the HTTP response.
         /// </summary>
-        public HttpStatusCode StatusCode { get; private set; }
+        public HttpStatusCode StatusCode { get; }
         
         /// <summary>
         /// The status code of the HTTP response.
         /// </summary>
-        public string StatusDescription { get; private set; }
+        public string StatusDescription { get; }
 
         /// <summary>
         /// The exception generated during the HTTP response.
         /// </summary>
-        public Exception Exception { get; private set; }
+        public Exception Exception { get; }
 
         /// <summary>
         /// The cookies returned by the HTTP response.
         /// </summary>
-        public CookieCollection Cookies { get; private set; }
+        public CookieCollection Cookies { get; }
 
         /// <summary>
         /// The headers returned by the HTTP response.
         /// </summary>
-        public WebHeaderCollection Headers { get; private set; }
+        public WebHeaderCollection Headers { get; }
 
         /// <summary>
         /// Was the HTTP request successful
         /// </summary>
-        public bool Successfully { get { return StatusCode == HttpStatusCode.OK && Exception == null; } }
+        public bool Successfully => StatusCode == HttpStatusCode.OK && Exception == null;
 
         /// <summary>
         /// Extracts the properties from the HTTP response.

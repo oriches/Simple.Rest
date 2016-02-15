@@ -13,7 +13,7 @@ namespace Simple.Rest
         /// <summary>
         /// The response resource.
         /// </summary>
-        public T Resource { get; private set; }
+        public T Resource { get; }
 
         /// <summary>
         /// Constructor for a successful response.

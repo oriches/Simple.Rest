@@ -54,22 +54,22 @@
         /// <summary>
         /// Serializer used for request resource types.
         /// </summary>
-        public ISerializer RequestSerializer { get; private set; }
+        public ISerializer RequestSerializer { get; }
 
         /// <summary>
         /// Serializer used for response resource types.
         /// </summary>
-        public ISerializer ResponseSerializer { get; private set; }
+        public ISerializer ResponseSerializer { get; }
 
         /// <summary>
         /// Cookies container used for the HTTP request.
         /// </summary>
-        public CookieCollection Cookies { get; private set; }
+        public CookieCollection Cookies { get; }
 
         /// <summary>
         /// HTTP headers collection for the HTTP request.
         /// </summary>
-        public WebHeaderCollection Headers { get; private set; }
+        public WebHeaderCollection Headers { get; }
 
         /// <summary>
         /// Credentials used for the HTTP request.
@@ -116,14 +116,14 @@
         }
 
         /// <summary>
-				/// Requests the server accept the resource asynchronuously and receives a disparate return type. The resource is identified by the URL.
-				/// </summary>
-				/// <typeparam name="T">The resource type</typeparam>
-				/// <typeparam name="R">The return type</typeparam>
-				/// <param name="url">The URL to POST the resource</param>
-				/// <param name="resource">The resource to be POST'd</param>
-				/// <returns>Returns the return type wrapped in a Task&lt;IRestResponse&lt;&gt;&gt;, the interface contains the return, status code &amp; description, headers &amp; cookies.</returns>
-				[Pure]
+		/// Requests the server accept the resource asynchronuously and receives a disparate return type. The resource is identified by the URL.
+		/// </summary>
+		/// <typeparam name="T">The resource type</typeparam>
+		/// <typeparam name="R">The return type</typeparam>
+		/// <param name="url">The URL to POST the resource</param>
+		/// <param name="resource">The resource to be POST'd</param>
+		/// <returns>Returns the return type wrapped in a Task&lt;IRestResponse&lt;&gt;&gt;, the interface contains the return, status code &amp; description, headers &amp; cookies.</returns>
+		[Pure]
         public Task<IRestResponse<R>> PostAsync<T, R>(Uri url, T resource)
 						where T : class
 						where R : class
@@ -218,10 +218,7 @@
                 }
                 finally
                 {
-                    if (response != null)
-                    {
-                        response.Dispose();
-                    }
+                    response?.Dispose();
                 }
             }
             catch (Exception exn)
@@ -250,10 +247,7 @@
                 }
                 finally
                 {
-                    if (response != null)
-                    {
-                        response.Dispose();
-                    }
+                    response?.Dispose();
                 }
             }
             catch (Exception exn)
@@ -289,10 +283,7 @@
                 }
                 finally
                 {
-                    if (response != null)
-                    {
-                        response.Dispose();
-                    }
+                    response?.Dispose();
                 }
             }
             catch (Exception exn)
@@ -326,10 +317,7 @@
                 }
                 finally
                 {
-                    if (response != null)
-                    {
-                        response.Dispose();
-                    }
+                    response?.Dispose();
                 }
             }
             catch (Exception exn)

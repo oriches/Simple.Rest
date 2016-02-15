@@ -25,7 +25,7 @@
             var cookies = Request.Headers.GetCookies();
             var testCookie = cookies.FirstOrDefault(c => c.Cookies.Contains(new CookieState("TestCookie")));
 
-            var employee = Employees.FirstOrDefault((p) => p.Id == id);
+            var employee = Employees.FirstOrDefault(p => p.Id == id);
             if (employee == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
@@ -48,7 +48,7 @@
 
         public void Put(int id, Employee employee)
         {
-            var existEmployee = Employees.FirstOrDefault((p) => p.Id == id);
+            var existEmployee = Employees.FirstOrDefault(p => p.Id == id);
             if (existEmployee == null)
             {
                 Employees.Add(existEmployee);

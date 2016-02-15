@@ -16,7 +16,7 @@ namespace Simple.Rest.Serializers
         /// <summary>
         /// The content type is "application/json".
         /// </summary>
-        public string ContentType { get; private set; }
+        public string ContentType { get; }
 
         /// <summary>
         /// Default constructor.
