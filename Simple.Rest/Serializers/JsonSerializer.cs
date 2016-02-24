@@ -37,11 +37,11 @@ namespace Simple.Rest.Serializers
         [Pure]
         public Stream Serialize<T>(T instance) where  T : class
         {
-            var writer = new StreamWriter(new MemoryStream(), Encoding.UTF8);
+            var writer = new StreamWriter(new MemoryStream());
             _serializer.Serialize(writer, instance);
-            
+
             writer.Flush();
-            writer.BaseStream.Seek(0, SeekOrigin.Begin);
+            writer.BaseStream.Position = 0;
 
             return writer.BaseStream;
         }

@@ -9,6 +9,7 @@
     using NUnit.Framework;
     using Rest;
     using Serializers;
+    using JsonSerializer = Serializers.JsonSerializer;
 
     [TestFixture]
     public class RestClientPostTests
@@ -18,7 +19,7 @@
 
         private string _baseUrl;
         private TestService _testService;
-        
+       
         [Test]
         public void should_post_json_object()
         {
