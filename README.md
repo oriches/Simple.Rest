@@ -1,6 +1,8 @@
 Simple.Rest
 ===========
 
+[![Build status](https://ci.appveyor.com/api/projects/status/pnqpfl7eeytfmxn2/branch/master?svg=true)](https://ci.appveyor.com/project/oriches/simple-rest/branch/master)
+
 A .Net Portable Class Library to simplify the calling of a RESTful web service from a .Net client application.
 
 For more information about the releases see [Release Info] (https://github.com/oriches/Simple.Rest/wiki/Release-Info).
