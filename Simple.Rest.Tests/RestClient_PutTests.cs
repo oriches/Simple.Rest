@@ -41,7 +41,7 @@
             Assert.That(updatedEmployee.LastName, Is.EqualTo(employee.LastName));
         }
 
-        [Test, Ignore]
+        [Test, Ignore("GZip not supported")]
         public void should_put_json_object_with_gzip_compression()
         {
             // ARRANGE
@@ -67,7 +67,7 @@
             Assert.That(updatedEmployee.LastName, Is.EqualTo(employee.LastName));
         }
 
-        [Test, Ignore]
+        [Test, Ignore("Deflate not supported")]
         public void should_put_json_object_with_deflate_compression()
         {
             // ARRANGE
