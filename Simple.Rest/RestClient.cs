@@ -209,7 +209,7 @@
                 HttpWebResponse response = null;
                 try
                 {
-                    response = await request.GetResponseAsync();
+                    response = (HttpWebResponse) await request.GetResponseAsync();
                     tcs.SetResult(ProcessResponse<T>(response));
                 }
                 catch (Exception exn)
@@ -238,7 +238,7 @@
                 HttpWebResponse response = null;
                 try
                 {
-                    response = await request.GetResponseAsync();
+                    response = (HttpWebResponse) await request.GetResponseAsync();
                     tcs.SetResult(new RestResponse(response));
                 }
                 catch (Exception exn)
@@ -274,7 +274,7 @@
                 HttpWebResponse response = null;
                 try
                 {
-                    response = await request.GetResponseAsync();
+                    response = (HttpWebResponse) await request.GetResponseAsync();
                     tcs.SetResult(ProcessResponse<TResponse>(response));
                 }
                 catch (Exception exn)
@@ -308,7 +308,7 @@
                 HttpWebResponse response = null;
                 try
                 {
-                    response = await request.GetResponseAsync();
+                    response = (HttpWebResponse) await request.GetResponseAsync();
                     tcs.SetResult(new RestResponse(response));
                 }
                 catch (Exception exn)
