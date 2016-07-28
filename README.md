@@ -20,8 +20,6 @@ You can skip the intro and go straight to the [Getting Started] (https://github.
 
 This class library makes use of the 'async & await' keywords available in the standard install of .Net 4.5 and by the inclusion of the <a href="https://www.nuget.org/packages/Microsoft.Bcl.Async">Microsoft.Bcl.Async</a> NuGet package for .Net 4.0, this means .Net 4.0 applications wanting to use this will have to have the Microsoft Hotfix <a href="http://support.microsoft.com/kb/2468871">KB2468871</a> installed.
 
-# Introduction
-
 This small library is a wrapper around the use of HttpWebRequest\WebRequest classes in the .Net framework and is designed to make the use of RESTful web service in a .Net application as easy as possible. An example will probably help to explain, imaging you're trying to GET an Employee resource from a RESTful web service and lets say the web service supports both JSON & XML resource representations:
 
 The Employee resource looks like this .Net (C#) code:
