@@ -1,7 +1,9 @@
 Simple.Rest
 ===========
 
-[![Build status](https://ci.appveyor.com/api/projects/status/pnqpfl7eeytfmxn2/branch/master?svg=true)](https://ci.appveyor.com/project/oriches/simple-rest/branch/master)
+[![Build status](https://ci.appveyor.com/api/projects/status/pnqpfl7eeytfmxn2/branch/master?svg=true)](https://ci.appveyor.com/project/oriches/simple-rest)
+
+As with all my 'important' stuff it builds using the amazing [AppVeyor](https://ci.appveyor.com/project/oriches/simple-rest).
 
 A .Net Portable Class Library to simplify the calling of a RESTful web service from a .Net client application.
 
