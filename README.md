@@ -7,13 +7,6 @@ A .Net Portable Class Library to simplify the calling of a RESTful web service f
 
 For more information about the releases see [Release Info] (https://github.com/oriches/Simple.Rest/wiki/Release-Info).
 
-Currently we support the following .Net versions:
-
-Supported versions:
-
-	.NET framework 4.0 and higher,
-	Silverlight 5.0
-	
 This library is available as a nuget [package] (https://nuget.org/packages/Simple.Rest).
 
 You can skip the intro and go straight to the [Getting Started] (https://github.com/oriches/Simple.Rest/wiki/Getting-Started) guide.
