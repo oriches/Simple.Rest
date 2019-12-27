@@ -17,7 +17,7 @@ namespace Simple.Rest.Tests.Infrastructure
             Compressors = new Collection<ICompressor> { new GZipCompressor(), new DeflateCompressor() };
         }
 
-        protected async override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             var contentEncoding = request.Content.Headers.ContentEncoding;
             if (contentEncoding != null && contentEncoding.Any() && request.Content != null)

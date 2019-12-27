@@ -1,21 +1,53 @@
-﻿namespace Simple.Rest.Tests
-{
-    using System;
-    using Dto;
-    using Extensions;
-    using Infrastructure;
-    using NUnit.Framework;
-    using Rest;
-    using Serializers;
+﻿using System;
+using NUnit.Framework;
+using Simple.Rest.Standard;
+using Simple.Rest.Standard.Extensions;
+using Simple.Rest.Standard.Serializers;
+using Simple.Rest.Tests.Dto;
+using Simple.Rest.Tests.Infrastructure;
 
+namespace Simple.Rest.Tests
+{
     [TestFixture]
     public class RestClientPutTests
     {
+        [SetUp]
+        public void SetUp()
+        {
+            _jsonRestClient.Headers.Clear();
+            _xmlRestClient.Headers.Clear();
+        }
+
         private IRestClient _jsonRestClient;
         private IRestClient _xmlRestClient;
 
         private string _baseUrl;
         private TestService _testService;
+
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
+        {
+            _baseUrl = $"http://{Environment.MachineName}:8081";
+
+            _testService = new TestService(_baseUrl);
+
+            _jsonRestClient = new RestClient(new JsonSerializer());
+            _xmlRestClient = new RestClient(new XmlSerializer());
+        }
+
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
+        {
+            _testService.Dispose();
+        }
+
+        private Employee GetEmployee(Uri url)
+        {
+            var task = _jsonRestClient.GetAsync<Employee>(url);
+            task.Wait();
+
+            return task.Result.Resource;
+        }
 
         [Test]
         public void should_put_json_object()
@@ -26,32 +58,33 @@
 
             // ACT
             employee.FirstName = "Oliver";
-           
+
             var task = _jsonRestClient.PutAsync(url, employee);
             task.Wait();
 
             var response = task.Result;
-            
+
             // ASSIGN
             var updatedEmployee = GetEmployee(url);
-            
+
             Assert.That(response, Is.Not.Null);
             Assert.That(updatedEmployee.Id, Is.EqualTo(employee.Id));
             Assert.That(updatedEmployee.FirstName, Is.EqualTo(employee.FirstName));
             Assert.That(updatedEmployee.LastName, Is.EqualTo(employee.LastName));
         }
 
-        [Test, Ignore("GZip not supported")]
-        public void should_put_json_object_with_gzip_compression()
+        [Test]
+        [Ignore("Deflate not supported")]
+        public void should_put_json_object_with_deflate_compression()
         {
             // ARRANGE
             var url = new Uri(_baseUrl + "/api/employees/1");
             var employee = GetEmployee(url);
 
             // ACT
-            employee.FirstName = "Ollie";
+            employee.FirstName = "Oliver";
 
-            var task = _jsonRestClient.WithGzipEncoding()
+            var task = _jsonRestClient.WithDeflateEncoding()
                 .PutAsync(url, employee);
 
             task.Wait();
@@ -67,17 +100,18 @@
             Assert.That(updatedEmployee.LastName, Is.EqualTo(employee.LastName));
         }
 
-        [Test, Ignore("Deflate not supported")]
-        public void should_put_json_object_with_deflate_compression()
+        [Test]
+        [Ignore("GZip not supported")]
+        public void should_put_json_object_with_gzip_compression()
         {
             // ARRANGE
             var url = new Uri(_baseUrl + "/api/employees/1");
             var employee = GetEmployee(url);
 
             // ACT
-            employee.FirstName = "Oliver";
+            employee.FirstName = "Ollie";
 
-            var task = _jsonRestClient.WithDeflateEncoding()
+            var task = _jsonRestClient.WithGzipEncoding()
                 .PutAsync(url, employee);
 
             task.Wait();
@@ -115,37 +149,6 @@
             Assert.That(updatedEmployee.Id, Is.EqualTo(employee.Id));
             Assert.That(updatedEmployee.FirstName, Is.EqualTo(employee.FirstName));
             Assert.That(updatedEmployee.LastName, Is.EqualTo(employee.LastName));
-        }
-
-        [TestFixtureSetUp]
-        public void FixtureSetUp()
-        {
-            _baseUrl = string.Format("http://{0}:8081", Environment.MachineName);
-
-            _testService = new TestService(_baseUrl);
-
-            _jsonRestClient = new RestClient(new JsonSerializer());
-            _xmlRestClient = new RestClient(new XmlSerializer());
-        }
-
-        [SetUp]
-        public void SetUp()
-        {
-            _jsonRestClient.Headers.Clear();
-        }
-
-        [TestFixtureTearDown]
-        public void TearDown()
-        {
-            _testService.Dispose();
-        }
-
-        private Employee GetEmployee(Uri url)
-        {
-            var task = _jsonRestClient.GetAsync<Employee>(url);
-            task.Wait();
-
-            return task.Result.Resource;
         }
     }
 }

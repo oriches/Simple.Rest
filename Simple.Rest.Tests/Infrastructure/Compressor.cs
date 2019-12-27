@@ -16,7 +16,10 @@ namespace Simple.Rest.Tests.Infrastructure
             var compressed = CreateCompressionStream(destination);
 
             return Pump(source, compressed)
-                .ContinueWith(task => compressed.Dispose());
+                .ContinueWith(task =>
+                {
+                    compressed.Dispose();
+                });
         }
 
         public virtual Task Decompress(Stream source, Stream destination)
@@ -24,7 +27,10 @@ namespace Simple.Rest.Tests.Infrastructure
             var decompressed = CreateDecompressionStream(source);
 
             return Pump(decompressed, destination)
-                .ContinueWith(task => decompressed.Dispose());
+                .ContinueWith(task =>
+                {
+                   // decompressed.Dispose();
+                });
         }
 
         protected virtual Task Pump(Stream input, Stream output)

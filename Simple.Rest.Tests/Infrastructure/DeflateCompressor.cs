@@ -7,10 +7,7 @@ namespace Simple.Rest.Tests.Infrastructure
     {
         private const string DeflateEncoding = "deflate";
 
-        public override string EncodingType
-        {
-            get { return DeflateEncoding; }
-        }
+        public override string EncodingType => DeflateEncoding;
 
         public override Stream CreateCompressionStream(Stream output)
         {

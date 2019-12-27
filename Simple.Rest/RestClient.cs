@@ -1,29 +1,20 @@
-﻿namespace Simple.Rest
-{
-    using System.Diagnostics.Contracts;
-    using System.IO;
-    using System.Net;
-    using System;
-    using System.Threading.Tasks;
-    using Ionic.Zlib;
-    using Serializers;
-    using Extensions;
+﻿using System;
+using System.IO;
+using System.Net;
+using System.Threading.Tasks;
+using Ionic.Zlib;
+using Simple.Rest.Standard;
+using Simple.Rest.Standard.Serializers;
 
+namespace Simple.Rest
+{
     /// <summary>
-    /// Class for resource orientated RESTful interface, supports verbs GET, POST, PUT &amp; DELETE.
+    ///     Class for resource orientated RESTful interface, supports verbs GET, POST, PUT &amp; DELETE.
     /// </summary>
     public sealed class RestClient : IRestClient
     {
-        internal enum HttpMethod
-        {
-            Get,
-            Post,
-            Put,
-            Delete
-        }
-
         /// <summary>
-        /// Creates an instance with the JSON serializer.
+        ///     Creates an instance with the JSON serializer.
         /// </summary>
         public RestClient()
             : this(new JsonSerializer(), new JsonSerializer())
@@ -31,7 +22,7 @@
         }
 
         /// <summary>
-        /// Creates an instance with a customer serializer, e.g. XML or JSON.
+        ///     Creates an instance with a customer serializer, e.g. XML or JSON.
         /// </summary>
         /// <param name="serializer"></param>
         public RestClient(ISerializer serializer)
@@ -40,7 +31,7 @@
         }
 
         /// <summary>
-        /// Creates an instance with specifiic serializers for requests &amp; responses.
+        ///     Creates an instance with specific serializers for requests &amp; responses.
         /// </summary>
         public RestClient(ISerializer requestSerializer, ISerializer responseSerializer)
         {
@@ -52,91 +43,103 @@
         }
 
         /// <summary>
-        /// Serializer used for request resource types.
+        ///     Serializer used for request resource types.
         /// </summary>
         public ISerializer RequestSerializer { get; }
 
         /// <summary>
-        /// Serializer used for response resource types.
+        ///     Serializer used for response resource types.
         /// </summary>
         public ISerializer ResponseSerializer { get; }
 
         /// <summary>
-        /// Cookies container used for the HTTP request.
+        ///     Cookies container used for the HTTP request.
         /// </summary>
         public CookieCollection Cookies { get; }
 
         /// <summary>
-        /// HTTP headers collection for the HTTP request.
+        ///     HTTP headers collection for the HTTP request.
         /// </summary>
         public WebHeaderCollection Headers { get; }
 
         /// <summary>
-        /// Credentials used for the HTTP request.
+        ///     Credentials used for the HTTP request.
         /// </summary>
         public ICredentials Credentials { get; set; }
-        
+
         /// <summary>
-        /// Requests the resource asynchronuously.
+        ///     Requests the resource asynchronously.
         /// </summary>
         /// <typeparam name="T">The resource type</typeparam>
         /// <param name="url">The URL to GET the resource</param>
-        /// <returns>Returns the resource wrapped in a Task&lt;IRestResponse&lt;T&gt;&gt;, the interface contains the resource, status code &amp; description, headers &amp; cookies.</returns>
-        [Pure]
+        /// <returns>
+        ///     Returns the resource wrapped in a Task&lt;IRestResponse&lt;T&gt;&gt;, the interface contains the resource,
+        ///     status code &amp; description, headers &amp; cookies.
+        /// </returns>
         public Task<IRestResponse<T>> GetAsync<T>(Uri url) where T : class
         {
             return ExecuteRequest<T>(url, HttpMethod.Get);
         }
 
         /// <summary>
-        /// Requests the resource be stored under the supplied URL asynchronuously. If the URL refers to an already existing resource, it is modified.
-        /// If the URL does not point to an existing resource, then the server can create the resource with that URL.
+        ///     Requests the resource be stored under the supplied URL asynchronously. If the URL refers to an already existing
+        ///     resource, it is modified.
+        ///     If the URL does not point to an existing resource, then the server can create the resource with that URL.
         /// </summary>
         /// <typeparam name="T">The resource type</typeparam>
         /// <param name="url">The URL to PUT the resource</param>
         /// <param name="resource">The resource to be PUT</param>
-        /// <returns>Returns the resource wrapped in a Task&lt;IRestResponse&lt;T&gt;&gt;, the interface contains the resource, status code &amp; description, headers &amp; cookies.</returns>
-        [Pure]
+        /// <returns>
+        ///     Returns the resource wrapped in a Task&lt;IRestResponse&lt;T&gt;&gt;, the interface contains the resource,
+        ///     status code &amp; description, headers &amp; cookies.
+        /// </returns>
         public Task<IRestResponse> PutAsync<T>(Uri url, T resource) where T : class
         {
             return ExecuteRequest(url, HttpMethod.Put, resource);
         }
 
         /// <summary>
-        /// Requests the server accept the resource asynchronuously. The resource is identified by the URL.
+        ///     Requests the server accept the resource asynchronously. The resource is identified by the URL.
         /// </summary>
         /// <typeparam name="T">The resource type</typeparam>
         /// <param name="url">The URL to POST the resource</param>
         /// <param name="resource">The resource to be POST'd</param>
-        /// <returns>Returns the resource wrapped in a Task&lt;IRestResponse&lt;T&gt;&gt;, the interface contains the resource, status code &amp; description, headers &amp; cookies.</returns>
-        [Pure]
+        /// <returns>
+        ///     Returns the resource wrapped in a Task&lt;IRestResponse&lt;T&gt;&gt;, the interface contains the resource,
+        ///     status code &amp; description, headers &amp; cookies.
+        /// </returns>
         public Task<IRestResponse<T>> PostAsync<T>(Uri url, T resource) where T : class
         {
             return ExecuteRequest<T, T>(url, HttpMethod.Post, resource);
         }
 
         /// <summary>
-		/// Requests the server accept the resource asynchronuously and receives a disparate return type. The resource is identified by the URL.
-		/// </summary>
-		/// <typeparam name="T">The resource type</typeparam>
-		/// <typeparam name="R">The return type</typeparam>
-		/// <param name="url">The URL to POST the resource</param>
-		/// <param name="resource">The resource to be POST'd</param>
-		/// <returns>Returns the return type wrapped in a Task&lt;IRestResponse&lt;&gt;&gt;, the interface contains the return, status code &amp; description, headers &amp; cookies.</returns>
-		[Pure]
+        ///     Requests the server accept the resource asynchronously and receives a disparate return type. The resource is
+        ///     identified by the URL.
+        /// </summary>
+        /// <typeparam name="T">The resource type</typeparam>
+        /// <typeparam name="R">The return type</typeparam>
+        /// <param name="url">The URL to POST the resource</param>
+        /// <param name="resource">The resource to be POST'd</param>
+        /// <returns>
+        ///     Returns the return type wrapped in a Task&lt;IRestResponse&lt;&gt;&gt;, the interface contains the return,
+        ///     status code &amp; description, headers &amp; cookies.
+        /// </returns>
         public Task<IRestResponse<R>> PostAsync<T, R>(Uri url, T resource)
-						where T : class
-						where R : class
+            where T : class
+            where R : class
         {
             return ExecuteRequest<T, R>(url, HttpMethod.Post, resource);
         }
 
         /// <summary>
-        /// Deletes a resource asynchronously. The resource is identified by the URL.
+        ///     Deletes a resource asynchronously. The resource is identified by the URL.
         /// </summary>
         /// <param name="url">The URL to GET the resource</param>
-        /// <returns>Returns the result in a Task&lt;IRestResponse&gt;, the interface contains the status code &amp; description, headers &amp; cookies.</returns>
-        [Pure]
+        /// <returns>
+        ///     Returns the result in a Task&lt;IRestResponse&gt;, the interface contains the status code &amp; description,
+        ///     headers &amp; cookies.
+        /// </returns>
         public Task<IRestResponse> DeleteAsync(Uri url)
         {
             return ExecuteRequest(url, HttpMethod.Delete);
@@ -166,7 +169,8 @@
             return task;
         }
 
-        private Task<IRestResponse<TResponse>> ExecuteRequest<TRequest, TResponse>(Uri url, HttpMethod method, TRequest resource)
+        private Task<IRestResponse<TResponse>> ExecuteRequest<TRequest, TResponse>(Uri url, HttpMethod method,
+            TRequest resource)
             where TRequest : class
             where TResponse : class
         {
@@ -178,7 +182,7 @@
 
         private HttpWebRequest CreateRequest(Uri url, HttpMethod method)
         {
-            var request = (HttpWebRequest)WebRequest.Create(url);
+            var request = (HttpWebRequest) WebRequest.Create(url);
             request.Method = method.ToString();
             request.Accept = ResponseSerializer.ContentType;
 
@@ -188,15 +192,9 @@
                 request.CookieContainer.Add(url, Cookies);
             }
 
-            if (Headers.Count != 0)
-            {
-                request.Headers = Headers;
-            }
+            if (Headers.Count != 0) request.Headers = Headers;
 
-            if (Credentials != null)
-            {
-                request.Credentials = Credentials;
-            }
+            if (Credentials != null) request.Credentials = Credentials;
 
             return request;
         }
@@ -258,7 +256,8 @@
             return await tcs.Task;
         }
 
-        private async Task<IRestResponse<TResponse>> WithBodyRequest<TRequest, TResponse>(HttpWebRequest request, TRequest resource)
+        private async Task<IRestResponse<TResponse>> WithBodyRequest<TRequest, TResponse>(HttpWebRequest request,
+            TRequest resource)
             where TRequest : class
             where TResponse : class
         {
@@ -351,27 +350,21 @@
 
         private RestResponse<T> ProcessResponse<T>(HttpWebResponse response) where T : class
         {
-            Contract.Requires<ArgumentNullException>(response != null);
-
             try
             {
                 if (IsGzipCompressed(response))
-                {
                     using (var stream = new GZipStream(response.GetResponseStream(), CompressionMode.Decompress))
                     {
                         var result = Deserialize<T>(stream);
                         return new RestResponse<T>(response, result);
-                    } 
-                }
-                
+                    }
+
                 if (IsDeflateCompressed(response))
-                {
                     using (var stream = new DeflateStream(response.GetResponseStream(), CompressionMode.Decompress))
                     {
                         var result = Deserialize<T>(stream);
                         return new RestResponse<T>(response, result);
                     }
-                }
 
                 using (var stream = response.GetResponseStream())
                 {
@@ -387,40 +380,42 @@
 
         private static bool IsGzipCompressed(WebResponse response)
         {
-            Contract.Requires<ArgumentNullException>(response != null);
-
             var encoding = response.Headers["Content-Encoding"];
             return !string.IsNullOrEmpty(encoding) && encoding.ToLower().Contains("gzip");
         }
 
         private static bool IsDeflateCompressed(WebResponse response)
         {
-            Contract.Requires<ArgumentNullException>(response != null);
+            var encoding = response.Headers["Content-Encoding"];
+            return !string.IsNullOrEmpty(encoding) && encoding.ToLower().Contains("deflate");
+        }
 
+        private static bool IsBrotliCompressed(WebResponse response)
+        {
             var encoding = response.Headers["Content-Encoding"];
             return !string.IsNullOrEmpty(encoding) && encoding.ToLower().Contains("deflate");
         }
 
         private static bool ShouldCompressWithGzip(WebRequest request)
         {
-            Contract.Requires<ArgumentNullException>(request != null);
-
             var encoding = request.Headers["Accept-Encoding"];
-            return !string.IsNullOrEmpty(encoding) && encoding.ToLower().Contains("gzip");
+            return !string.IsNullOrEmpty(encoding) && encoding.ToLower().Contains("br");
         }
 
         private static bool ShouldCompressWithDeflate(WebRequest request)
         {
-            Contract.Requires<ArgumentNullException>(request != null);
-
             var encoding = request.Headers["Accept-Encoding"];
             return !string.IsNullOrEmpty(encoding) && encoding.ToLower().Contains("deflate");
         }
 
+        private static bool ShouldCompressWithBrotli(WebRequest request)
+        {
+            var encoding = request.Headers["Accept-Encoding"];
+            return !string.IsNullOrEmpty(encoding) && encoding.ToLower().Contains("br");
+        }
+
         private byte[] Serialize<T>(T resource) where T : class
         {
-            Contract.Requires<ArgumentNullException>(resource != null);
-
             byte[] result;
 
             using (var stream = RequestSerializer.Serialize(resource))
@@ -434,11 +429,17 @@
 
         private T Deserialize<T>(Stream stream) where T : class
         {
-            Contract.Requires<ArgumentNullException>(stream != null);
-
             var result = ResponseSerializer.Deserialize<T>(stream);
 
             return result;
+        }
+
+        internal enum HttpMethod
+        {
+            Get,
+            Post,
+            Put,
+            Delete
         }
     }
 }

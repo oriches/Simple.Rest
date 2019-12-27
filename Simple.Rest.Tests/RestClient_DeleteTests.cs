@@ -1,21 +1,45 @@
-﻿namespace Simple.Rest.Tests
-{
-    using System;
-    using System.Net;
-    using Infrastructure;
-    using NUnit.Framework;
-    using Rest;
-    using Serializers;
+﻿using System;
+using System.Net;
+using NUnit.Framework;
+using Simple.Rest.Standard;
+using Simple.Rest.Standard.Serializers;
+using Simple.Rest.Tests.Infrastructure;
 
+namespace Simple.Rest.Tests
+{
     [TestFixture]
     public class RestClientDeleteTests
     {
+        [SetUp]
+        public void SetUp()
+        {
+            _jsonRestClient.Headers.Clear();
+            _xmlRestClient.Headers.Clear();
+        }
+
         private IRestClient _xmlRestClient;
         private IRestClient _jsonRestClient;
 
         private string _baseUrl;
         private TestService _testService;
-        
+
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
+        {
+            _baseUrl = $"http://{Environment.MachineName}:8083";
+
+            _testService = new TestService(_baseUrl);
+
+            _jsonRestClient = new RestClient(new JsonSerializer());
+            _xmlRestClient = new RestClient(new XmlSerializer());
+        }
+
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
+        {
+            _testService.Dispose();
+        }
+
         [Test]
         public void should_delete_json_object()
         {
@@ -27,7 +51,7 @@
             task.Wait();
 
             var response = task.Result;
-            
+
             // ASSIGN
             Assert.That(response, Is.Not.Null);
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NoContent));
@@ -48,23 +72,6 @@
             // ASSIGN
             Assert.That(response, Is.Not.Null);
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NoContent));
-        }
-
-        [TestFixtureSetUp]
-        public void SetUp()
-        {
-            _baseUrl = string.Format("http://{0}:8083", Environment.MachineName);
-
-            _testService = new TestService(_baseUrl);
-
-            _jsonRestClient = new RestClient(new JsonSerializer());
-            _xmlRestClient = new RestClient(new XmlSerializer());
-        }
-
-        [TestFixtureTearDown]
-        public void TearDown()
-        {
-            _testService.Dispose();
         }
     }
 }

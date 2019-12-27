@@ -46,12 +46,12 @@
             return response;
         }
 
-        public void Put(int id, Employee employee)
+        public void Put(int id, [FromBody]Employee employee)
         {
             var existEmployee = Employees.FirstOrDefault(p => p.Id == id);
             if (existEmployee == null)
             {
-                Employees.Add(existEmployee);
+                Employees.Add(employee);
             }
             else
             {
@@ -60,7 +60,7 @@
             }
         }
 
-        public HttpResponseMessage Post(Employee employee)
+        public HttpResponseMessage Post([FromBody]Employee employee)
         {
             var maxId = Employees.Max(e => e.Id);
             var newId = ++maxId;
