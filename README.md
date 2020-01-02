@@ -5,7 +5,7 @@ Simple.Rest
 
 As with all my 'important' stuff it builds using the amazing [AppVeyor](https://ci.appveyor.com/project/oriches/simple-rest).
 
-A .Net Portable Class Library to simplify the calling of a RESTful web service from a .Net client application.
+A .Net (.Net 4.8 & .Net Core 3.0) Class Library to simplify the calling of a RESTful web service from a .Net client application.
 
 For more information about the releases see [Release Info] (https://github.com/oriches/Simple.Rest/wiki/Release-Info).
 
