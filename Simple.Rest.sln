@@ -21,6 +21,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Simple.Rest.TestHarness", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Simple.Rest.Tests", ".net core\Simple.Rest.Core.Tests\Simple.Rest.Tests.csproj", "{2AB1E1B3-3F28-4DE2-A8FC-46A262C11C4D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget spec", ".nuget spec", "{6A999289-69FC-4D06-867B-96840DA3834D}"
+	ProjectSection(SolutionItems) = preProject
+		Simple.Rest.nuspec = Simple.Rest.nuspec
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

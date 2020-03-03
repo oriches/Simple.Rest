@@ -2,18 +2,26 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Version>1.0.0</Version>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <PackageProjectUrl>https://github.com/oriches/Simple.Rest</PackageProjectUrl>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.2" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.2" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.2" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
     <PackageReference Include="Microsoft.Reactive.Testing" Version="4.3.2" />
     <PackageReference Include="NUnit" Version="3.12.0" />
-    <PackageReference Include="NUnit.ConsoleRunner" Version="3.10.0" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.15.1" />
+    <PackageReference Include="NUnit.ConsoleRunner" Version="3.11.1" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.16.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
