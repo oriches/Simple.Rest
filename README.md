@@ -1,4 +1,4 @@
-Simple.Rest
+# Simple.Rest
 
 [![NuGet](https://img.shields.io/nuget/v/simple.rest.svg)](https://github.com/oriches/simple.rest)
 [![Build status](https://ci.appveyor.com/api/projects/status/pnqpfl7eeytfmxn2/branch/master?svg=true)](https://ci.appveyor.com/project/oriches/simple-rest)
