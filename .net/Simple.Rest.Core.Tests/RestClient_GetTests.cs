@@ -23,6 +23,8 @@ namespace Simple.Rest.Tests
         {
             _jsonRestClient.Headers.Clear();
             _xmlRestClient.Headers.Clear();
+
+            Database.Reset();
         }
 
         private IRestClient _jsonRestClient;
@@ -34,29 +36,6 @@ namespace Simple.Rest.Tests
 
         private TestService _testService;
         private TestScheduler _testScheduler;
-
-        [Test]
-        public void should_fail_when_url_is_invalid_controller()
-        {
-            // ARRANGE
-            var url = new Uri(_baseUrl + "/api/documents/1");
-            var sync = new ManualResetEvent(false);
-
-            // ACT
-            Exception exn = null;
-            _jsonRestClient.GetAsync<Employee>(url)
-                .ToObservable()
-                .Take(1)
-                .Subscribe(_ => { }, e =>
-                {
-                    exn = e;
-                    sync.Set();
-                });
-
-            // ASSERT
-            sync.WaitOne();
-            Assert.That(exn, Is.Not.Null);
-        }
 
         [OneTimeSetUp]
         public void OneTimeSetUp()
@@ -76,7 +55,7 @@ namespace Simple.Rest.Tests
         [OneTimeTearDown]
         public void OneTimeTearDown()
         {
-            _testService?.Dispose();
+            _testService.Dispose();
         }
 
         [Test]
@@ -84,6 +63,29 @@ namespace Simple.Rest.Tests
         {
             // ARRANGE
             var url = new Uri(_invalidHostUrl + "/api/employees/99");
+            var sync = new ManualResetEvent(false);
+
+            // ACT
+            Exception exn = null;
+            _jsonRestClient.GetAsync<Employee>(url)
+                .ToObservable()
+                .Take(1)
+                .Subscribe(_ => { }, e =>
+                {
+                    exn = e;
+                    sync.Set();
+                });
+
+            // ASSERT
+            sync.WaitOne();
+            Assert.That(exn, Is.Not.Null);
+        }
+
+        [Test]
+        public void should_fail_when_url_is_invalid_controller()
+        {
+            // ARRANGE
+            var url = new Uri(_baseUrl + "/api/documents/1");
             var sync = new ManualResetEvent(false);
 
             // ACT
@@ -152,7 +154,7 @@ namespace Simple.Rest.Tests
         public void should_fail_with_timeout()
         {
             // ARRANGE
-            var timeout = _testService.Delay.Add(new TimeSpan(0, 0, 0, 1));
+            var timeout = Database.Delay.Add(new TimeSpan(0, 0, 0, 1));
             var url = new Uri(_baseUrl + "/api/reports/1");
 
             // ACT
@@ -220,7 +222,7 @@ namespace Simple.Rest.Tests
             var employees = task.Result.Resource;
 
             // ASSIGN
-            CollectionAssert.AreEquivalent(_testService.Employees, employees);
+            CollectionAssert.AreEquivalent(Database.Employees, employees);
         }
 
         [Test]
@@ -236,14 +238,14 @@ namespace Simple.Rest.Tests
             var employees = task.Result.Resource;
 
             // ASSIGN
-            CollectionAssert.AreEquivalent(_testService.Employees, employees);
+            CollectionAssert.AreEquivalent(Database.Employees, employees);
         }
 
         [Test]
         public void should_return_single_json_object()
         {
             // ARRANGE
-            var employees = _testService.Employees;
+            var employees = Database.Employees;
             var url = new Uri(_baseUrl + "/api/employees/1");
 
             // ACT
@@ -260,10 +262,32 @@ namespace Simple.Rest.Tests
         }
 
         [Test]
+        public void should_return_single_json_object_with_brotli_compressions()
+        {
+            // ARRANGE
+            var employees = Database.Employees;
+            var url = new Uri(_baseUrl + "/api/employees/1");
+
+            // ACT
+            var task = _jsonRestClient.WithBrotliEncoding()
+                .GetAsync<Employee>(url);
+
+            task.Wait();
+
+            var employee = task.Result.Resource;
+
+            // ASSERT
+            Assert.That(employee, Is.Not.Null);
+            Assert.That(employee.Id, Is.EqualTo(employees.First().Id));
+            Assert.That(employee.FirstName, Is.EqualTo(employees.First().FirstName));
+            Assert.That(employee.LastName, Is.EqualTo(employees.First().LastName));
+        }
+
+        [Test]
         public void should_return_single_json_object_with_deflate_compressions()
         {
             // ARRANGE
-            var employees = _testService.Employees;
+            var employees = Database.Employees;
             var url = new Uri(_baseUrl + "/api/employees/1");
 
             // ACT
@@ -285,7 +309,7 @@ namespace Simple.Rest.Tests
         public void should_return_single_json_object_with_gzip_compressions()
         {
             // ARRANGE
-            var employees = _testService.Employees;
+            var employees = Database.Employees;
             var url = new Uri(_baseUrl + "/api/employees/1");
 
             // ACT
@@ -307,7 +331,7 @@ namespace Simple.Rest.Tests
         public void should_return_single_xml_object()
         {
             // ARRANGE
-            var employees = _testService.Employees;
+            var employees = Database.Employees;
             var url = new Uri(_baseUrl + "/api/employees/1");
 
             // ACT

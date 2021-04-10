@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>Simple.Rest</id>
-    <version>1.0</version>
+    <version>1.0.0</version>
     <authors>Ollie Riches</authors>
     <owners>Ollie Riches</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -10,7 +10,7 @@
     <description>This small library is a wrapper around the use of HttpWebRequest\WebRequest classes in the .Net framework and is designed to make the use of RESTful web service in a .Net application as easy as possible.</description>
     <summary>A .Net Class Library to simplify the calling of a RESTful web service from a .Net client application.</summary>
     <releaseNotes>Refactored common code into .Net Standard</releaseNotes>
-    <copyright>Simple.Rest 2020</copyright>
+    <copyright>Simple.Rest 2021</copyright>
     <language>en-GB</language>
     <tags>REST, RESTful, Web Service, Xml, JSON, HTTP, Communication</tags>
     <dependencies>
@@ -21,16 +21,20 @@
       <group targetFramework=".NETStandard2.0">
         <dependency id="Newtonsoft.Json" version="12.0.3" />
       </group>
+      <group targetFramework="net5.0" />
     </dependencies>
     <frameworkReferences>
       <group targetFramework=".NETFramework4.8" />
     </frameworkReferences>
   </metadata>
   <files>
-    <file src=".net framework\Simple.Rest\bin\Release\Simple.Rest.Common.dll" target="lib\net48\Simple.Rest.Common.dll" />
-    <file src=".net framework\Simple.Rest\bin\Release\Simple.Rest.dll" target="lib\net48\Simple.Rest.dll" />
-    <file src=".net core\Simple.Rest\bin\Release\netcoreapp3.1\Simple.Rest.Common.dll" target="lib\netcoreapp3.1\Simple.Rest.Common.dll" />
-    <file src=".net core\Simple.Rest\bin\Release\netcoreapp3.1\Simple.Rest.deps.json" target="lib\netcoreapp3.1\Simple.Rest.deps.json" />
-    <file src=".net core\Simple.Rest\bin\Release\netcoreapp3.1\Simple.Rest.dll" target="lib\netcoreapp3.1\Simple.Rest.dll" />
+    <file src="lib\net48\Simple.Rest.Common.dll" target="lib\net48\Simple.Rest.Common.dll" />
+    <file src="lib\net48\Simple.Rest.dll" target="lib\net48\Simple.Rest.dll" />
+    <file src="lib\net5.0\Simple.Rest.Common.dll" target="lib\net5.0\Simple.Rest.Common.dll" />
+    <file src="lib\net5.0\Simple.Rest.deps.json" target="lib\net5.0\Simple.Rest.deps.json" />
+    <file src="lib\net5.0\Simple.Rest.dll" target="lib\net5.0\Simple.Rest.dll" />
+    <file src="lib\netcoreapp3.1\Simple.Rest.Common.dll" target="lib\netcoreapp3.1\Simple.Rest.Common.dll" />
+    <file src="lib\netcoreapp3.1\Simple.Rest.deps.json" target="lib\netcoreapp3.1\Simple.Rest.deps.json" />
+    <file src="lib\netcoreapp3.1\Simple.Rest.dll" target="lib\netcoreapp3.1\Simple.Rest.dll" />
   </files>
 </package>

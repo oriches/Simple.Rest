@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
     <Version>1.0.0</Version>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
@@ -10,7 +11,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <ProjectReference Include="..\Simple.Rest.Core.Tests\Simple.Rest.Tests.csproj" />
+    <ProjectReference Include="..\Simple.Rest\Simple.Rest.csproj" />
   </ItemGroup>
 
 </Project>
